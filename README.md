@@ -14,11 +14,19 @@ python build_groundtruth.py data/ecoli/Database_search_output_Ecoli_EV_2.xlsx Ec
 
 ### Generate Decoy
 ```
-python generate_decoy.py data_mgf/ecoli/Ecoli_EV_1.mgf data_mgf_decoy/ecoli/Ecoli_EV_1.mgf
-python generate_decoy.py data_mgf/ecoli/Ecoli_EV_2.mgf data_mgf_decoy/ecoli/Ecoli_EV_2.mgf
+python generate_decoy.py data_mgf/ecoli/Ecoli_EV_1.mgf data_mgf_decoy/ecoli/Ecoli_EV_1.decoy.mgf
+python generate_decoy.py data_mgf/ecoli/Ecoli_EV_2.mgf data_mgf_decoy/ecoli/Ecoli_EV_2.decoy.mgf
 
-python generate_decoy.py data_mgf/wastewater/wastewater_Sample1_1.mgf data_mgf_decoy/wastewater/wastewater_Sample1_1.mgf
-python generate_decoy.py data_mgf/wastewater/wastewater_Sample1_2.mgf data_mgf_decoy/wastewater/wastewater_Sample1_2.mgf
-python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_1.mgf data_mgf_decoy/wastewater/wastewater_Sample2_1.mgf
-python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_2.mgf data_mgf_decoy/wastewater/wastewater_Sample2_2.mgf
+python generate_decoy.py data_mgf/wastewater/wastewater_Sample1_1.mgf data_mgf_decoy/wastewater/wastewater_Sample1_1.decoy.mgf
+python generate_decoy.py data_mgf/wastewater/wastewater_Sample1_2.mgf data_mgf_decoy/wastewater/wastewater_Sample1_2.decoy.mgf
+python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_1.mgf data_mgf_decoy/wastewater/wastewater_Sample2_1.decoy.mgf
+python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_2.mgf data_mgf_decoy/wastewater/wastewater_Sample2_2.decoy.mgf
+```
+
+### Casanovo
+
+```
+sudo docker build -t casanovo .
+
+./run-casanovo.sh
 ```
