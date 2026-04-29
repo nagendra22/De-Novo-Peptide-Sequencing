@@ -1,0 +1,23 @@
+# Novor parameters for E. coli / wastewater Orbitrap Astral HCD data
+# Format: key = value (case-sensitive keys)
+# Mod ID source for Novor v1.05: <jar>/trypsin-hcd-ft/modifications.txt
+# (extract via: unzip -p novor.jar trypsin-hcd-ft/modifications.txt)
+
+enzyme               = Trypsin
+fragmentation        = HCD
+massAnalyzer         = FT
+
+# Tightened from the bundled defaults (0.5Da / 10ppm) for high-res Astral HCD
+fragmentIonErrorTol  = 0.05Da
+precursorErrorTol    = 10.0ppm
+
+# Mod IDs use Novor 1.05 PEAKS-style names. Available mods include:
+#   Carbamidomethyl (C), Oxidation (M), Phospho (ST), Phospho (Y),
+#   Acetyl (K), Acetyl (N-term), Carbamyl (K), Carbamyl (N-term),
+#   Pyro-Glu (E), Pyro-Glu (Q), Pyro-carbamidomethyl (N-term C), Amidated (C-term)
+fixedModifications     = Carbamidomethyl (C)
+variableModifications  = Oxidation (M)
+
+# I is forbidden because it is mass-equivalent to L (Novor's default)
+# U (selenocysteine) is forbidden because it is rare
+forbiddenResidues    = I,U

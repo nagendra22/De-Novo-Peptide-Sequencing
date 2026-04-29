@@ -23,10 +23,16 @@ python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_1.mgf data_mgf_d
 python generate_decoy.py data_mgf/wastewater/wastewater_Sample2_2.mgf data_mgf_decoy/wastewater/wastewater_Sample2_2.decoy.mgf
 ```
 
+### Novor
+
+```
+./run_novor.sh
+```
+
 ### Casanovo
 
 ```
 sudo docker build -t casanovo .
 
-./run-casanovo.sh
+./run_casanovo.sh
 ```

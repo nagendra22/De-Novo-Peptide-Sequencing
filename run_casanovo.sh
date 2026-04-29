@@ -3,6 +3,10 @@
 samples_ecoli=(Ecoli_EV_1 Ecoli_EV_2)
 samples_wastewater=(wastewater_Sample1_1 wastewater_Sample1_2 wastewater_Sample2_1 wastewater_Sample2_2)
 
+mkdir -p result/casanovo/ecoli result/casanovo/wastewater
+mkdir -p result_mgf/casanovo/ecoli result_mgf/casanovo/wastewater
+mkdir -p result_mgf_decoy/casanovo/ecoli result_mgf_decoy/casanovo/wastewater
+
 # mzML
 for sample in "${samples_ecoli[@]}"; do
   sudo docker run --rm --runtime=nvidia \
