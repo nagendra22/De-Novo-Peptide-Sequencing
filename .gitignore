@@ -229,3 +229,7 @@ result_mgf/
 result_mgf_decoy/
 
 ground_truth/
+ground_truth_merged/
+
+novoboard_in/
+novoboard_in_merged/
