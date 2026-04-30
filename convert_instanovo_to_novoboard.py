@@ -22,6 +22,7 @@ Usage:
         --output novoboard_in/instanovo/ecoli/Ecoli_EV_1.csv
 """
 import argparse
+import ast
 import csv
 import os
 import re
@@ -106,9 +107,10 @@ def main():
         missing = [c for c in required if c not in reader.fieldnames]
         if missing:
             sys.exit(f"missing columns in {args.pred}: {missing}")
+        has_token_lp = "token_log_probs" in reader.fieldnames
 
         writer = csv.writer(fout)
-        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score"])
+        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score", "AA Score"])
 
         for row in reader:
             rows_in += 1
@@ -133,7 +135,17 @@ def main():
             z = to_int(row.get("precursor_charge", ""))
             score = to_float(row.get("log_probs", ""))
 
-            writer.writerow([source_file, scan, mz, z, 0, pep, score])
+            aa_score = ""
+            if has_token_lp:
+                tlp = (row.get("token_log_probs") or "").strip()
+                if tlp:
+                    try:
+                        vals = ast.literal_eval(tlp)
+                        aa_score = " ".join(f"{float(v):.6f}" for v in vals)
+                    except (ValueError, SyntaxError):
+                        aa_score = ""
+
+            writer.writerow([source_file, scan, mz, z, 0, pep, score, aa_score])
             rows_out += 1
 
     print(f"[3/3] Done")

@@ -120,7 +120,7 @@ def main():
 
     with open(args.output, "w", newline="") as fout:
         writer = csv.writer(fout)
-        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score"])
+        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score", "AA Score"])
 
         for row in parse_novor_csv(args.pred):
             rows_in += 1
@@ -147,8 +147,9 @@ def main():
             z = to_int(row.get("z", ""))
             rt = to_float(row.get("RT", ""), default=0.0)
             score = to_float(row.get("score", ""))
+            aa_score = (row.get("aaScore") or "").replace("-", " ").strip()
 
-            writer.writerow([source_file, scan, mz, z, rt, pep, score])
+            writer.writerow([source_file, scan, mz, z, rt, pep, score, aa_score])
             rows_out += 1
 
     print(f"[3/3] Done")

@@ -63,3 +63,6 @@ Run the following in colab (A100 GPU)
 
 ./merge_samples.sh
 ```
+
+### Novoboard TODO:
+Decoy MGFs at (30/40/60/70%)

@@ -115,7 +115,7 @@ def main():
 
     with open(args.output, "w", newline="") as fout:
         writer = csv.writer(fout)
-        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score"])
+        writer.writerow(["Source File", "Scan", "m/z", "z", "RT", "Peptide", "Score", "AA Score"])
 
         for psm in parse_mztab_psms(args.pred):
             rows_in += 1
@@ -141,8 +141,9 @@ def main():
             z = to_int(psm.get("charge", ""))
             rt = to_float(psm.get("retention_time", ""), default=0.0)
             score = to_float(psm.get("search_engine_score[1]", ""))
+            aa_score = (psm.get("opt_ms_run[1]_aa_scores") or "").replace(",", " ").strip()
 
-            writer.writerow([source_file, scan, mz, z, rt, pep, score])
+            writer.writerow([source_file, scan, mz, z, rt, pep, score, aa_score])
             rows_out += 1
 
     print(f"[3/3] Done")
