@@ -56,7 +56,7 @@ Run the following in colab (A100 GPU)
 
 ## Evaluate
 
-### Novoboard
+### NovoBoard
 
 ```
 ./run_conversions.sh
@@ -64,5 +64,19 @@ Run the following in colab (A100 GPU)
 ./merge_samples.sh
 ```
 
-### Novoboard TODO:
+run NovoBoard notebooks
+* novoboard/aa.fdr_github_ecoli.ipynb
+* novoboard/aa.fdr_github_wastewater_sample1.ipynb
+* novoboard/aa.fdr_github_wastewater_sample2.ipynb
+
+### NovoBoard TODO:
+
 Decoy MGFs at (30/40/60/70%)
+
+## Map to biological source
+
+### Unipept
+
+```
+python filter_for_unipept.py
+```
