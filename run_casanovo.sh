@@ -69,3 +69,6 @@ for sample in "${samples_wastewater[@]}"; do
     --output_dir /result/casanovo/wastewater \
     --output_root ${sample}.decoy
 done
+
+# Files written by the container are root-owned on the host. Restore ownership.
+sudo chown -R "$(id -u):$(id -g)" result
