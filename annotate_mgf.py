@@ -11,8 +11,8 @@ The ground-truth CSV is assumed to be in PEAKS notation (as produced by
 build_groundtruth.py: C(+57.02), M(+15.99), ...). Use --notation to pick
 the SEQ= form written into the output:
 
-    peaks    (default)  C(+57.02), M(+15.99)   <- InstaNovo / NovoBoard
-    casanovo            C+57.021,  M+15.995    <- Casanovo
+    peaks    (default)  C(+57.02), M(+15.99)             <- InstaNovo / NovoBoard
+    casanovo            C[Carbamidomethyl], M[Oxidation]  <- Casanovo 5+ (ProForma)
 
 Usage:
     python annotate_mgf.py \
@@ -34,13 +34,15 @@ import sys
 
 TITLE_SCAN_RE = re.compile(r"\.(\d+)\.(\d+)\.(\d+)\s*$")
 
-# PEAKS-rounded mass deltas -> Casanovo's canonical 3-decimal masses.
-# Keys match the tags that build_groundtruth.py writes.
+# PEAKS-rounded mass deltas -> Casanovo 5.x ProForma notation.
+# Casanovo 5+ requires bracketed mod names (or bracketed mass deltas).
+# Pre-5.x mass-delta-after-AA notation (M+15.995) is no longer parsed.
+# Names below match Casanovo's default alphabet entries.
 PEAKS_TO_CASANOVO = {
-    "(+15.99)": "+15.995",
-    "(+57.02)": "+57.021",
-    "(+0.98)":  "+0.984",
-    "(+79.97)": "+79.966",
+    "(+15.99)": "[Oxidation]",
+    "(+57.02)": "[Carbamidomethyl]",
+    "(+0.98)":  "[Deamidated]",
+    "(+79.97)": "[Phospho]",
 }
 
 LEFTOVER_PAREN_RE = re.compile(r"\([^)]+\)")

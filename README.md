@@ -94,3 +94,9 @@ annotate_mgf.sh
 ```
 ./split_annotated_mgf.sh
 ```
+
+### Run Finetune
+
+```
+./run_casanovo_finetune.sh
+```

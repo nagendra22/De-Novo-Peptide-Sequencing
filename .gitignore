@@ -228,6 +228,7 @@ data_mgf_annotated/
 result/
 result_mgf/
 result_mgf_decoy/
+result_finetune/
 
 ground_truth/
 ground_truth_merged/
@@ -237,3 +238,5 @@ novoboard_in_merged/
 novoboard_out/
 
 unipept_in/
+
+model_finetune/
