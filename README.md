@@ -88,3 +88,9 @@ python filter_for_unipept.py
 ```
 annotate_mgf.sh
 ```
+
+### Split training and validation
+
+```
+./split_annotated_mgf.sh
+```
