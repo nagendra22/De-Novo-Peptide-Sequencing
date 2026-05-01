@@ -9,7 +9,12 @@
 #   wastewater/wastewater_Sample2   <-  wastewater_Sample2_1, wastewater_Sample2_2
 #
 # Output:
-#   novoboard_in_finetune_merged/<tool>/{target,decoy}/<dataset>/<sample>.csv
+#   novoboard_in_finetune_merged/<tool>/{target,decoy}/wastewater/<sample>.csv
+#
+# Note: ecoli has only one held-out fraction (EV_2) — no merge needed,
+# so downstream tools read it directly from the per-fraction tree:
+#   novoboard_in_finetune/<tool>/{target,decoy}/ecoli/Ecoli_EV_2.csv
+# (produced by run_conversions_finetune.sh).
 #
 # (No GT merge here — ground truth is independent of fine-tuning and
 # already merged by merge_samples.sh into ground_truth_merged/.)
@@ -71,14 +76,6 @@ for tool in "${tools[@]}"; do
                 "novoboard_in_finetune/${tool}/${run}/${dataset}/${f2}.csv" \
                 || true
         done
-    done
-done
-
-# E. Coli Sample 2
-for tool in "${tools[@]}"; do
-    for run in "${runs[@]}"; do
-        mkdir -p "novoboard_in_finetune_merged/${tool}/${run}/ecoli"
-        cp novoboard_in_finetune/${tool}/${run}/ecoli/Ecoli_EV_2.csv novoboard_in_finetune_merged/${tool}/${run}/ecoli/
     done
 done
 
