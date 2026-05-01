@@ -223,6 +223,7 @@ bin/
 data/
 data_mgf/
 data_mgf_decoy/
+data_mgf_annotated/
 
 result/
 result_mgf/

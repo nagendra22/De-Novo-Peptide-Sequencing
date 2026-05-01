@@ -80,3 +80,11 @@ Decoy MGFs at (30/40/60/70%)
 ```
 python filter_for_unipept.py
 ```
+
+## Finetune
+
+### Annotate E. Coli mgf with ground truth
+
+```
+annotate_mgf.sh
+```
