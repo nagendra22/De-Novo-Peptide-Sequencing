@@ -4,6 +4,7 @@
 #   - Docker image tagged `casanovo` available locally.
 #   - bin/casanovo/casanovo_v5_0_0_v5_0_0.ckpt extracted from the
 #     image's /root/.cache/casanovo/ directory.
+#   - finetuned checkpoint model_finetune/casanovo/epoch=9-step=310.ckpt
 
 CKPT="epoch=9-step=310.ckpt"
 

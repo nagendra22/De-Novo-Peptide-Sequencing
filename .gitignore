@@ -229,6 +229,8 @@ result/
 result_mgf/
 result_mgf_decoy/
 result_finetune/
+result_finetune_mgf/
+result_finetune_mgf_decoy/
 
 ground_truth/
 ground_truth_merged/

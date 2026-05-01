@@ -100,3 +100,15 @@ annotate_mgf.sh
 ```
 ./run_casanovo_finetune.sh
 ```
+
+### Evaluate Finetune
+
+```
+./run_casanovo_finetune_eval.sh
+```
+
+### Predict using finetuned model
+
+```
+./run_casanovo_finetune_predict.sh
+```
