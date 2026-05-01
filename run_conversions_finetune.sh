@@ -1,26 +1,28 @@
 #!/bin/bash
-# Convert per-tool prediction outputs into NovoBoard-format CSVs (one
-# CSV per fraction). Output tree:
-#   novoboard_in/<tool>/{target,decoy}/<dataset>/<fraction>.csv
+# Convert per-tool fine-tuned prediction outputs into NovoBoard-format
+# CSVs (one CSV per fraction). Output tree:
+#   novoboard_in_finetune/<tool>/{target,decoy}/<dataset>/<fraction>.csv
 #
 # Tolerates missing inputs: logs SKIP and continues.
 # Idempotent: outputs are overwritten on re-run.
 #
 # Usage:
-#   bash run_conversions.sh
+#   bash run_conversions_finetune.sh
 
 set -uo pipefail
 
-samples_ecoli=(Ecoli_EV_1 Ecoli_EV_2)
+# Ecoli_EV_1 was used during fine-tuning, so only Ecoli_EV_2 is a valid
+# held-out evaluation set.
+samples_ecoli=(Ecoli_EV_2)
 samples_wastewater=(wastewater_Sample1_1 wastewater_Sample1_2 wastewater_Sample2_1 wastewater_Sample2_2)
 
 # <tool>  <converter>                            <pred file ext>
 # instanovoplus reuses the instanovo converter (same CSV schema).
+# Novor is closed source — not user-fine-tunable, so removed entirely.
 tools=(
     "casanovo       convert_casanovo_to_novoboard.py    mztab"
     "instanovo      convert_instanovo_to_novoboard.py   csv"
     "instanovoplus  convert_instanovo_to_novoboard.py   csv"
-    "novor          convert_novor_to_novoboard.py       csv"
 )
 
 run_one() {
@@ -44,29 +46,29 @@ for tool_spec in "${tools[@]}"; do
     echo "=== ${tool} (target) ==="
     for s in "${samples_ecoli[@]}"; do
         run_one "$converter" \
-            "result_mgf/${tool}/ecoli/${s}.${ext}" \
+            "result_finetune_mgf/${tool}/ecoli/${s}.${ext}" \
             "data_mgf/ecoli/${s}.mgf" \
-            "novoboard_in/${tool}/target/ecoli/${s}.csv"
+            "novoboard_in_finetune/${tool}/target/ecoli/${s}.csv"
     done
     for s in "${samples_wastewater[@]}"; do
         run_one "$converter" \
-            "result_mgf/${tool}/wastewater/${s}.${ext}" \
+            "result_finetune_mgf/${tool}/wastewater/${s}.${ext}" \
             "data_mgf/wastewater/${s}.mgf" \
-            "novoboard_in/${tool}/target/wastewater/${s}.csv"
+            "novoboard_in_finetune/${tool}/target/wastewater/${s}.csv"
     done
 
     echo "=== ${tool} (decoy) ==="
     for s in "${samples_ecoli[@]}"; do
         run_one "$converter" \
-            "result_mgf_decoy/${tool}/ecoli/${s}.decoy.${ext}" \
+            "result_finetune_mgf_decoy/${tool}/ecoli/${s}.decoy.${ext}" \
             "data_mgf_decoy/ecoli/${s}.decoy.mgf" \
-            "novoboard_in/${tool}/decoy/ecoli/${s}.csv"
+            "novoboard_in_finetune/${tool}/decoy/ecoli/${s}.csv"
     done
     for s in "${samples_wastewater[@]}"; do
         run_one "$converter" \
-            "result_mgf_decoy/${tool}/wastewater/${s}.decoy.${ext}" \
+            "result_finetune_mgf_decoy/${tool}/wastewater/${s}.decoy.${ext}" \
             "data_mgf_decoy/wastewater/${s}.decoy.mgf" \
-            "novoboard_in/${tool}/decoy/wastewater/${s}.csv"
+            "novoboard_in_finetune/${tool}/decoy/wastewater/${s}.csv"
     done
 done
 

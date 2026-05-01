@@ -112,3 +112,16 @@ annotate_mgf.sh
 ```
 ./run_casanovo_finetune_predict.sh
 ```
+
+### NovoBoard
+
+```
+./run_conversions_finetune.sh
+
+./merge_samples_finetune.sh
+```
+
+run NovoBoard notebooks
+* novoboard/aa.fdr_github_ecoli.ipynb
+* novoboard/aa.fdr_github_wastewater_sample1.ipynb
+* novoboard/aa.fdr_github_wastewater_sample2.ipynb

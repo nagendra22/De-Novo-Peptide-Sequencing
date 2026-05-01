@@ -237,6 +237,8 @@ ground_truth_merged/
 
 novoboard_in/
 novoboard_in_merged/
+novoboard_in_finetune/
+novoboard_in_finetune_merged/
 novoboard_out/
 
 unipept_in/
