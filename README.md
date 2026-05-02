@@ -50,7 +50,7 @@ sudo docker build -t casanovo .
 
 ### Instanovo, Instanovo+
 
-Run the following in colab (A100 GPU)
+Run the following in Colab (A100 GPU)
 * instanovo/instanovo_colab_ecoli.ipynb
 * instanovo/instanovo_colab_wastewater.ipynb
 
@@ -101,7 +101,7 @@ annotate_mgf.sh
 ./run_casanovo_finetune.sh
 ```
 
-Run the following in Colab (A 100)
+Run the following in colab (A100 GPU)
 * instanovo/instanovo_colab_finetune.ipynb
 
 ### Evaluate Finetune
@@ -110,7 +110,7 @@ Run the following in Colab (A 100)
 ./run_casanovo_finetune_eval.sh
 ```
 
-Run the following in Colab (A 100)
+Run the following in Colab (A100 GPU)
 * instanovo/instanovo_colab_evaluate.ipynb
 
 ### Predict using finetuned model
@@ -118,6 +118,9 @@ Run the following in Colab (A 100)
 ```
 ./run_casanovo_finetune_predict.sh
 ```
+
+Run the following in Colab (A 100)
+* instanovo/instanovo_colab_ecoli_finetune.ipynb
 
 ### NovoBoard
 
