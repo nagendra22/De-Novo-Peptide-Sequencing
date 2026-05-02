@@ -1,0 +1,82 @@
+defaults:
+  - instanovoplus
+  - finetune: default
+  - override residues: 30aa   # 30-residue vocab — verified to match v1.1.0 InstaNovo+ ckpt (same as v1.2.0 InstaNovo, paired models). `override` because the `instanovoplus` parent already includes `residues: default`.
+  - _self_
+
+# Fine-tuning trigger — points at the pretrained InstaNovo+ ckpt copied from Drive.
+resume_checkpoint_path: /content/bin/instanovoplus/instanovoplus-v1.1.0.ckpt
+
+# Fine-tuning hyperparameters (small data -> low LR, short schedule).
+# ~960 train spectra / 32 batch ~= 30 steps/epoch x 10 epochs ~= 300 steps.
+learning_rate: 5.0e-6
+warmup_iters: 30          # 1 epoch warmup (LR ramps 0 -> 5e-6)
+training_steps: 300
+train_batch_size: 32
+validation_interval: 30
+checkpoint_interval: 30
+console_logging_steps: 10
+tensorboard_logging_steps: 10
+model_save_folder_path: /content/model_finetune/instanovoplus
+
+# Track best ckpt by lowest valid_loss — these fields are NOT in the
+# diffusion parent config (the transformer parent has them, the
+# diffusion one doesn't), so without setting them here the trainer's
+# save_model() only writes model_latest.ckpt and never copies it to
+# model_best.ckpt.
+checkpoint_metric: valid_loss
+checkpoint_metric_mode: min
+
+# Logging / runtime
+use_neptune: false
+compile_model: false      # InstaNovo+ default is true; disabled here for fast small fine-tune (compile overhead isn't worth 300 steps)
+seed: 42
+
+# Model vocab override — the diffusion model's `vocab_size` is hardcoded
+# in `model: instanovoplus_base` (set to 35) and does NOT auto-follow the
+# residue count. The pretrained v1.1.0 ckpt has 33-token head/embed
+# ([33, 768]); leaving vocab_size=35 builds the model with [35, 768]
+# layers and load_state_dict fails with a size mismatch.
+# Set to 33 = 30 residues (from `30aa.yaml`) + 3 specials (PAD/SOS/EOS).
+model:
+  vocab_size: 33
+
+# Layer-freezing schedule for the diffusion model (transition_model.*).
+# Layer names verified by inspecting the v1.1.0 ckpt's state_dict:
+#   - head:               transition_model.head.{0,1}.*  (head.1.weight + head.1.bias are the head; head.0 is silu/etc)
+#   - char embedding:     transition_model.char_embedding.weight
+#   - 12 transformer body layers: transition_model.layers.{0..11}.*  (~345 keys total — the diffusion "decoder")
+#   - spectrum encoder:   transition_model.encoder.*  (154 keys — input side, kept frozen until phase 3)
+# (See instanovo/diffusion/train.py:update_vocab + ckpt inspection.)
+#
+# Schedule mirrors the InstaNovo (transformer) finetune:
+#   steps 0-59   (~epochs 0-1): head + char embedding only (warmup happens in steps 0-30)
+#   steps 60-149 (~epochs 2-4): + transition_model.layers.* (the 12 transformer body layers)
+#   steps 150+   (~epochs 5-9): everything trains (incl. spectrum encoder + peripherals)
+finetune:
+  unfreeze_format: start_step
+  verbose: true
+  unfreeze_schedule:
+    - start_step: 0
+      params:
+        - transition_model.head.1.bias
+        - transition_model.head.1.weight
+        - transition_model.char_embedding.weight
+    - start_step: 60     # ≈ epoch 2 (961 train / 32 batch ≈ 30 steps/epoch)
+      params:
+        - transition_model.layers.*
+    - start_step: 150    # ≈ epoch 5
+      params:
+        - "*"
+
+# Dataset overrides — single-file MGF training, not parquet shards.
+dataset:
+  train_path:
+    - /content/data_mgf_annotated/ecoli/Ecoli_EV_1.instanovo.train.mgf
+  valid_path:
+    ecoli: /content/data_mgf_annotated/ecoli/Ecoli_EV_1.instanovo.val.mgf
+  lazy_loading: true       # InstaNovo's trainer assumes IterableDataset (.shuffle accepts buffer_size); regular Dataset crashes
+  preshuffle_across_shards: false
+  perform_data_checks: false
+  validate_precursor_mass: false
+  blacklist: null

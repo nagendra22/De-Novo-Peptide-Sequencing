@@ -1,7 +1,7 @@
 defaults:
   - instanovo
   - finetune: default
-  - override residues: v1_2_0_ckpt   # 30-residue vocab matching the v1.2.0 ckpt — `override` because the `instanovo` parent already includes `residues: default`
+  - override residues: 30aa   # 30-residue vocab matching the v1.2.0 ckpt — `override` because the `instanovo` parent already includes `residues: default`
   - _self_
 
 # Fine-tuning trigger — points at the pretrained ckpt copied from Drive.

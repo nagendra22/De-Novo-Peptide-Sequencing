@@ -103,6 +103,7 @@ annotate_mgf.sh
 
 Run the following in colab (A100 GPU)
 * instanovo/instanovo_colab_finetune.ipynb
+* instanovo/instanovoplus_colab_finetune.ipynb
 
 ### Evaluate Finetune
 
@@ -112,6 +113,7 @@ Run the following in colab (A100 GPU)
 
 Run the following in Colab (A100 GPU)
 * instanovo/instanovo_colab_evaluate.ipynb
+* instanovo/instanovoplus_colab_evaluate.ipynb
 
 ### Predict using finetuned model
 

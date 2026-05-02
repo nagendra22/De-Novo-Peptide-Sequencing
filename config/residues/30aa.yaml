@@ -1,12 +1,12 @@
-# 30-residue vocabulary matching the pretrained `instanovo-v1.2.0.ckpt`'s
-# embedded residue table — listed in the SAME ORDER as the ckpt's residues
-# dict (vocab indexing is order-sensitive).
+# 30-residue vocabulary used by both `instanovo-v1.2.0.ckpt` (transformer)
+# and `instanovoplus-v1.1.0.ckpt` (diffusion). Listed in the SAME ORDER as
+# the ckpts' embedded residues dict — vocab indexing is order-sensitive.
 #
 # The package's default residues file (`instanovo/configs/residues/default.yaml`)
-# adds two residues that the v1.2.0 ckpt was NOT trained with:
+# adds two residues that neither released ckpt was trained with:
 #   - R[UNIMOD:7]  (citrullination/Arg deamidation)
 #   - P[UNIMOD:35] (hydroxyproline)
-# Using the default 32-residue config against this ckpt triggers the
+# Using the default 32-residue config against either ckpt triggers the
 # trainer's residue-mismatch path, which (a) hits a shape-bug in
 # `_update_vocab` partial mode (33 vs 35 head rows), and (b) in delete mode
 # silently strips head/aa_embed and trains from a random head.
