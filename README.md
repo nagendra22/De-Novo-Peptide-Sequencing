@@ -123,6 +123,7 @@ Run the following in Colab (A100 GPU)
 
 Run the following in Colab (A 100)
 * instanovo/instanovo_colab_ecoli_finetune.ipynb
+* instanovo/instanovo_colab_wastewater_finetune.ipynb
 
 ### NovoBoard
 
