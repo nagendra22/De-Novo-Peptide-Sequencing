@@ -1,0 +1,60 @@
+defaults:
+  - instanovo
+  - finetune: default
+  - override residues: v1_2_0_ckpt   # 30-residue vocab matching the v1.2.0 ckpt — `override` because the `instanovo` parent already includes `residues: default`
+  - _self_
+
+# Fine-tuning trigger — points at the pretrained ckpt copied from Drive.
+resume_checkpoint_path: /content/bin/instanovo/instanovo-v1.2.0.ckpt
+
+# Fine-tuning hyperparameters (small data -> low LR, short schedule).
+# ~960 train spectra / 32 batch ~= 30 steps/epoch x 10 epochs ~= 300 steps.
+learning_rate: 5.0e-6
+warmup_iters: 30          # 1 epoch warmup (LR ramps 0 -> 5e-6)
+training_steps: 300
+train_batch_size: 32
+validation_interval: 30
+checkpoint_interval: 30
+console_logging_steps: 10
+tensorboard_logging_steps: 10
+model_save_folder_path: /content/model_finetune/instanovo
+
+# Logging / runtime
+use_neptune: false
+compile_model: false
+seed: 42
+
+# Layer-freezing schedule (overrides finetune/default.yaml's defaults):
+#   steps 0-59   (~epochs 0-1): head only         (warmup happens in steps 0-30)
+#   steps 60-149 (~epochs 2-4): + decoder.*       (decoder added)
+#   steps 150+   (~epochs 5-9): *                 (everything trains)
+#
+# Using `start_step` instead of `start_epoch` avoids needing steps_per_epoch
+# (which the FinetuneScheduler can't infer from an IterableDataset).
+finetune:
+  unfreeze_format: start_step
+  verbose: true
+  unfreeze_schedule:
+    - start_step: 0
+      params:
+        - head.bias
+        - head.weight
+        - aa_embed.weight
+    - start_step: 60     # ≈ epoch 2 (961 train / 32 batch ≈ 30 steps/epoch)
+      params:
+        - decoder.*
+    - start_step: 150    # ≈ epoch 5
+      params:
+        - "*"
+
+# Dataset overrides — single-file MGF training, not parquet shards.
+dataset:
+  train_path:
+    - /content/data_mgf_annotated/ecoli/Ecoli_EV_1.instanovo.train.mgf
+  valid_path:
+    ecoli: /content/data_mgf_annotated/ecoli/Ecoli_EV_1.instanovo.val.mgf
+  lazy_loading: true       # InstaNovo's trainer assumes IterableDataset (.shuffle accepts buffer_size); regular Dataset crashes
+  preshuffle_across_shards: false
+  perform_data_checks: false
+  validate_precursor_mass: false
+  blacklist: null

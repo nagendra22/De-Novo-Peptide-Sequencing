@@ -11,8 +11,9 @@ The ground-truth CSV is assumed to be in PEAKS notation (as produced by
 build_groundtruth.py: C(+57.02), M(+15.99), ...). Use --notation to pick
 the SEQ= form written into the output:
 
-    peaks    (default)  C(+57.02), M(+15.99)             <- InstaNovo / NovoBoard
-    casanovo            C[Carbamidomethyl], M[Oxidation]  <- Casanovo 5+ (ProForma)
+    peaks    (default)  C(+57.02), M(+15.99)             <- NovoBoard / build_groundtruth
+    casanovo            C[Carbamidomethyl], M[Oxidation]  <- Casanovo 5+ (ProForma names)
+    unimod              C[UNIMOD:4], M[UNIMOD:35]         <- InstaNovo (ProForma UNIMOD IDs)
 
 Usage:
     python annotate_mgf.py \
@@ -34,23 +35,40 @@ import sys
 
 TITLE_SCAN_RE = re.compile(r"\.(\d+)\.(\d+)\.(\d+)\s*$")
 
-# PEAKS-rounded mass deltas -> Casanovo 5.x ProForma notation.
-# Casanovo 5+ requires bracketed mod names (or bracketed mass deltas).
-# Pre-5.x mass-delta-after-AA notation (M+15.995) is no longer parsed.
-# Names below match Casanovo's default alphabet entries.
-PEAKS_TO_CASANOVO = {
-    "(+15.99)": "[Oxidation]",
-    "(+57.02)": "[Carbamidomethyl]",
-    "(+0.98)":  "[Deamidated]",
-    "(+79.97)": "[Phospho]",
+# Translation tables: PEAKS-rounded mass deltas -> each tool's native form.
+#   - casanovo: Casanovo 5.x ProForma with named modifications.
+#   - unimod  : ProForma with UNIMOD IDs — what InstaNovo's vocabulary uses.
+NOTATION_MAPS = {
+    "casanovo": {
+        "(+15.99)": "[Oxidation]",
+        "(+57.02)": "[Carbamidomethyl]",
+        "(+0.98)":  "[Deamidated]",
+        "(+79.97)": "[Phospho]",
+    },
+    "unimod": {
+        "(+15.99)": "[UNIMOD:35]",
+        "(+57.02)": "[UNIMOD:4]",
+        "(+0.98)":  "[UNIMOD:7]",
+        "(+79.97)": "[UNIMOD:21]",
+    },
 }
 
 LEFTOVER_PAREN_RE = re.compile(r"\([^)]+\)")
 
 
-def to_casanovo_notation(pep: str) -> tuple[str, list[str]]:
+def translate_peptide(pep: str, notation: str) -> tuple[str, list[str]]:
+    """Translate a PEAKS-form peptide to the requested notation.
+
+    Returns (translated_peptide, list_of_unrecognized_PEAKS_tags). For
+    notation='peaks', returns the input unchanged.
+    """
+    if notation == "peaks":
+        return pep, []
+    table = NOTATION_MAPS.get(notation)
+    if table is None:
+        raise ValueError(f"unknown notation: {notation!r}")
     out = pep
-    for src, dst in PEAKS_TO_CASANOVO.items():
+    for src, dst in table.items():
         out = out.replace(src, dst)
     leftovers = LEFTOVER_PAREN_RE.findall(out)
     return out, leftovers
@@ -69,19 +87,18 @@ def load_groundtruth(path: str, notation: str) -> dict[int, str]:
             pep = row["Peptide"].strip()
             if not pep:
                 continue
-            if notation == "casanovo":
-                pep, leftovers = to_casanovo_notation(pep)
-                for tag in leftovers:
-                    unmapped[tag] = unmapped.get(tag, 0) + 1
+            pep, leftovers = translate_peptide(pep, notation)
+            for tag in leftovers:
+                unmapped[tag] = unmapped.get(tag, 0) + 1
             scan_to_pep[scan] = pep
 
     if unmapped:
         print(f"  WARNING: {sum(unmapped.values())} peptides contain "
-              f"PEAKS tags with no Casanovo translation:")
+              f"PEAKS tags with no {notation} translation:")
         for tag, n in sorted(unmapped.items(), key=lambda kv: -kv[1]):
             print(f"           {tag}  x{n}")
-        print(f"           Add an entry to PEAKS_TO_CASANOVO if Casanovo "
-              f"should score these.")
+        print(f"           Add an entry to NOTATION_MAPS[{notation!r}] "
+              f"if these should be scored.")
     return scan_to_pep
 
 
@@ -159,10 +176,11 @@ def main():
     ap.add_argument("--keep-unlabelled", action="store_true",
                     help="retain spectra without a ground-truth label "
                          "(default: drop them)")
-    ap.add_argument("--notation", choices=["peaks", "casanovo"],
+    ap.add_argument("--notation", choices=["peaks", "casanovo", "unimod"],
                     default="peaks",
-                    help="SEQ= notation: peaks for InstaNovo/NovoBoard "
-                         "(default), casanovo for `casanovo evaluate`")
+                    help="SEQ= notation: peaks for NovoBoard/build_groundtruth "
+                         "(default), casanovo for Casanovo 5.x training/eval, "
+                         "unimod for InstaNovo training/eval")
     args = ap.parse_args()
 
     print(f"[1/3] Loading ground truth: {args.groundtruth}  "

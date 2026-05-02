@@ -51,8 +51,8 @@ sudo docker build -t casanovo .
 ### Instanovo, Instanovo+
 
 Run the following in colab (A100 GPU)
-* instanovo_colab_ecoli.ipynb
-* instanovo_colab_wastewater.ipynb
+* instanovo/instanovo_colab_ecoli.ipynb
+* instanovo/instanovo_colab_wastewater.ipynb
 
 ## Evaluate
 
@@ -101,11 +101,17 @@ annotate_mgf.sh
 ./run_casanovo_finetune.sh
 ```
 
+Run the following in Colab (A 100)
+* instanovo/instanovo_colab_finetune.ipynb
+
 ### Evaluate Finetune
 
 ```
 ./run_casanovo_finetune_eval.sh
 ```
+
+Run the following in Colab (A 100)
+* instanovo/instanovo_colab_evaluate.ipynb
 
 ### Predict using finetuned model
 

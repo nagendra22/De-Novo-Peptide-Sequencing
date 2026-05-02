@@ -13,5 +13,5 @@ for sample in "${samples_ecoli[@]}"; do
         --mgf data_mgf/ecoli/${sample}.mgf \
         --groundtruth ground_truth/ecoli/${sample}.csv \
         --output data_mgf_annotated/ecoli/${sample}.instanovo.annotated.mgf \
-        --notation peaks
+        --notation unimod
 done

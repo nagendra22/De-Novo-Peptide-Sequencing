@@ -1,0 +1,46 @@
+# 30-residue vocabulary matching the pretrained `instanovo-v1.2.0.ckpt`'s
+# embedded residue table — listed in the SAME ORDER as the ckpt's residues
+# dict (vocab indexing is order-sensitive).
+#
+# The package's default residues file (`instanovo/configs/residues/default.yaml`)
+# adds two residues that the v1.2.0 ckpt was NOT trained with:
+#   - R[UNIMOD:7]  (citrullination/Arg deamidation)
+#   - P[UNIMOD:35] (hydroxyproline)
+# Using the default 32-residue config against this ckpt triggers the
+# trainer's residue-mismatch path, which (a) hits a shape-bug in
+# `_update_vocab` partial mode (33 vs 35 head rows), and (b) in delete mode
+# silently strips head/aa_embed and trains from a random head.
+#
+# Verified zero occurrences of either dropped token in our annotated MGFs
+# (Ecoli_EV_1 train/val and Ecoli_EV_2 test) — safe to omit.
+residues:
+  G: 57.021464
+  A: 71.037114
+  S: 87.032028
+  P: 97.052764
+  V: 99.068414
+  T: 101.04767
+  C: 103.009185
+  L: 113.084064
+  I: 113.084064
+  N: 114.042927
+  D: 115.026943
+  Q: 128.058578
+  K: 128.094963
+  E: 129.042593
+  M: 131.040485
+  H: 137.058912
+  F: 147.068414
+  R: 156.101111
+  Y: 163.063329
+  W: 186.079313
+  M[UNIMOD:35]: 147.0354
+  C[UNIMOD:4]: 160.030649
+  N[UNIMOD:7]: 115.026943
+  Q[UNIMOD:7]: 129.042594
+  S[UNIMOD:21]: 166.998028
+  T[UNIMOD:21]: 181.01367
+  Y[UNIMOD:21]: 243.029329
+  '[UNIMOD:1]': 42.010565
+  '[UNIMOD:5]': 43.005814
+  '[UNIMOD:385]': -17.026549
