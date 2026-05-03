@@ -229,6 +229,7 @@ result/
 result_mgf/
 result_mgf_decoy/
 result_finetune/
+result_finetune_annotated/
 result_finetune_mgf/
 result_finetune_mgf_decoy/
 
