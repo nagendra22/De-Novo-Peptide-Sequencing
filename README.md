@@ -6,6 +6,10 @@ De Novo Peptide Sequencing
 ### Convert mzML to mgf
 convert_mzml_to_mgf.ps1
 
+### Exploratory Data Analysis
+Run the notebook
+* eda.ipynb
+
 ### Build Ground truth
 
 ```
