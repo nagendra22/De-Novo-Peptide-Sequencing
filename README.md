@@ -68,14 +68,17 @@ Run the following in Colab (A100 GPU)
 ./merge_samples.sh
 ```
 
-run NovoBoard notebooks
+Quick summary:
+* evaluation.ipynb
+
+run NovoBoard notebooks for more details
 * novoboard/aa.fdr_github_ecoli.ipynb
 * novoboard/aa.fdr_github_wastewater_sample1.ipynb
 * novoboard/aa.fdr_github_wastewater_sample2.ipynb
 
 ### NovoBoard TODO:
 
-Decoy MGFs at (30/40/60/70%)
+Generate Decoy MGFs at (30/40/60/70%) for FDR Calibration validation. We have selected 1%, 5% and 10% FDR for evaluation but we are not sure of true or more accurate FDR. This will result in 4 inference runs for all samples for all tools and give better calibration.
 
 ## Map to biological source
 
