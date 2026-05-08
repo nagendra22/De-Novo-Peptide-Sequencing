@@ -132,7 +132,7 @@ Run the following in Colab (A 100)
 * instanovo/instanovo_colab_ecoli_finetune.ipynb
 * instanovo/instanovo_colab_wastewater_finetune.ipynb
 
-### NovoBoard
+### NovoBoard inspired evaluations
 
 ```
 ./run_conversions_finetune.sh
@@ -140,7 +140,6 @@ Run the following in Colab (A 100)
 ./merge_samples_finetune.sh
 ```
 
-run NovoBoard notebooks
-* novoboard/aa.fdr_github_ecoli.ipynb
-* novoboard/aa.fdr_github_wastewater_sample1.ipynb
-* novoboard/aa.fdr_github_wastewater_sample2.ipynb
+run the notebooks:
+* evaluation.ipynb
+* evaliate_finetune_score_shift.ipynb
