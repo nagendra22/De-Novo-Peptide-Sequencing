@@ -241,6 +241,7 @@ novoboard_in_merged/
 novoboard_in_finetune/
 novoboard_in_finetune_merged/
 novoboard_out/
+novoboard_out_finetune/
 
 unipept_in/
 
